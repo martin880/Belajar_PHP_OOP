@@ -2,6 +2,7 @@
 
 namespace Data;
 
+// parent class
 class Shape{
     public function getCorner(): int 
     {
@@ -9,13 +10,15 @@ class Shape{
     }
 }
 
-class Rectangle extends Shape{
+// class turunan
+class Rectangle extends Shape{ 
     public function getCorner(): int 
     {
         return 4;
     }
     public function getParentCorner(): int 
     {
-        return parent::getCorner(); // mengakses parent class
+        // mengakses parent class
+        return parent::getCorner();
     }
 }
