@@ -19,6 +19,7 @@ class Company{
     public Programmer $programmer;
 }
 
+// type check & casts pada object
 function sayHelloProgrammer(Programmer $programmer)
 {
     if ($programmer instanceof BackendProgrammer){
