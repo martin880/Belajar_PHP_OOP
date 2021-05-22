@@ -1,6 +1,6 @@
 <?php
 
-class Produk
+abstract class Produk // kelas abstract
 {
     // Property => mereprensentasikan data/keadaan dari sebuah objek
     private  $judul = "judul",
@@ -19,13 +19,14 @@ class Produk
         $this->harga = $harga;
     }
 
-    // method => merepresentasikan perilaku dari sebuah objek
+    // Method => merepresentasikan perilaku dari sebuah objek
     public function getLabel()
     {
         return "$this->penulis, $this->penerbit";
     }
 
-    public function getInfoProduk()
+    abstract public function getInfoProduk(); // Method abstract, hanya interface saja, implementasinya ada di kelas turunannya
+    public function getInfo()
     {
         $str = "{$this->judul} | {$this->getLabel()} (Rp. {$this->harga})";
 
@@ -93,9 +94,9 @@ class Komik extends Produk
 
         $this->jmlHalaman = $jmlHalaman;
     }
-    public function getInfoProduk()
+    public function getInfoProduk() // implementasi dari method abstract
     {
-        $str = "Komik : " . parent::getInfoProduk() . " - {$this->jmlHalaman} Halaman.";
+        $str = "Komik : " . $this->getInfo() . " - {$this->jmlHalaman} Halaman.";
         return $str;
     }
 }
@@ -109,18 +110,30 @@ class Game extends Produk
 
         $this->waktuMain = $waktuMain;
     }
-    public function getInfoProduk()
+    public function getInfoProduk() // implementasi dari method abstract
     {
-        $str = "Game : " . parent::getInfoProduk() . " ~ {$this->waktuMain} Jam.";
+        $str = "Game : " . $this->getInfo() . " ~ {$this->waktuMain} Jam.";
         return $str;
     }
 }
 
 class CetakInfoProduk
 {
-    public function cetak(Produk $produk)
+    public $daftarProduk = array();
+
+    public function tambahProduk(Produk $produk)
     {
-        $str = "{$produk->judul} | {$produk->getLabel()} (Rp. {$produk->harga})";
+        $this->daftarProduk[] = $produk;
+    }
+
+    public function cetak()
+    {
+        $str = "DAFTAR PRODUK : " . PHP_EOL;
+
+        foreach ($this->daftarProduk as $p) {
+            $str .= "- {$p->getInfoProduk()}" . PHP_EOL;
+        }
+
         return $str;
     }
 }
@@ -130,36 +143,14 @@ class CetakInfoProduk
 $produk1 = new Komik("Naritik Naoto", "Martin", "Sempurna Street", 11000000, 100);
 $produk2 = new Game("Game cacing cacing", "Iska", "Langkat Group", 112000000, 50);
 
-// echo "Komik : " . $produk1->getLabel();
-// echo PHP_EOL;
-// echo "Game : " . $produk2->getLabel();
-// echo PHP_EOL;
+$cetakProduk = new CetakInfoProduk();
+$cetakProduk->tambahProduk($produk1);
+$cetakProduk->tambahProduk($produk2);
 
-// $infoProduk1 = new CetakInfoProduk();
-// echo $infoProduk1->cetak($produk1);
-// echo PHP_EOL;
-// echo $infoProduk1->cetak($produk2);
+echo $cetakProduk->cetak();
 
-echo $produk1->getInfoProduk();
-echo PHP_EOL;
-echo $produk2->getInfoProduk();
-echo PHP_EOL . "====================================================================";
-echo PHP_EOL;
-
-$produk2->setDiskon(40);
-
-echo $produk2->getHarga();
-echo PHP_EOL . "Setelah diskon 40% menjadi Rp.";
-echo $produk2->getDiskon();
-echo PHP_EOL . "====================================================================";
-echo PHP_EOL;
-
-$produk1->setJudul("Uchiha Sasule"); // mengganti nilai dari judul dengan method set
-echo "Judul = " . $produk1->getJudul();
-echo PHP_EOL;
-echo "Harga = " . $produk1->getHarga();
-echo PHP_EOL;
-$produk1->setPenulis("Martin"); // mengganti nilai dari judul dengan method set
-echo "Penulis = " . $produk1->getPenulis();
-echo PHP_EOL;
-echo "Hari lahir saya adalah " . date("l", mktime(0, 0, 0, 3, 27, 1991));
+// Kenapa menggunakan kelas abstract?
+// 1. Mempresentasikan ide atau konsep dasar
+// 2. Composition over Inheritance => Melakukan komposisi (abstraksi atau interface) dibandingkan melakukan inheritance
+// 3. Salah satu cara menerapkan Polimorphism
+// 4. Sentralisasi logic
