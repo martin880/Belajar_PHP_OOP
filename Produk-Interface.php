@@ -5,7 +5,7 @@ interface InfoProduk
     public function getInfoProduk();
 }
 
-abstract class Produk
+abstract class Produk // kelas abstrak
 {
     // Property => mereprensentasikan data/keadaan dari sebuah objek
     protected  $judul = "judul",
